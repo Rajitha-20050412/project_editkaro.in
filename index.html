@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Editkaro — Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="description" content="Editkaro.in — Social media marketing & video editing portfolio" />
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1320; --muted:#94a3b8; --accent:#ff6b6b; --glass: rgba(255,255,255,0.03);
+      --accent-2:#7c5cff; --white: #e6eef6;
+      --max-w:1200px;
+      --gap:18px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#071126 0%, #0f1724 100%);color:var(--white);} 
+    a{color:inherit;text-decoration:none}
+
+    .wrap{max-width:var(--max-w);margin:28px auto;padding:20px;}
+
+    header{display:flex;align-items:center;gap:18px;justify-content:space-between;margin-bottom:18px}
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:20px;box-shadow:0 6px 20px rgba(124,92,255,0.18)}
+    .brand h1{margin:0;font-size:18px}
+    .brand p{margin:0;font-size:12px;color:var(--muted)}
+
+    .controls{display:flex;gap:10px;align-items:center}
+    .btn{background:var(--glass);border:1px solid rgba(255,255,255,0.04);padding:8px 12px;border-radius:10px;color:var(--white);cursor:pointer;font-size:14px}
+    .btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;box-shadow:0 8px 30px rgba(124,92,255,0.18)}
+
+    .hero{display:flex;gap:18px;align-items:center;margin-bottom:22px}
+    .hero-info{flex:1}
+    .hero h2{margin:0;font-size:22px}
+    .hero p{margin:6px 0 0;color:var(--muted)}
+
+    .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+    .filter{padding:8px 12px;border-radius:999px;background:transparent;border:1px solid rgba(255,255,255,0.04);cursor:pointer;color:var(--muted);font-size:13px}
+    .filter.active{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;border:none}
+
+    .search{display:flex;align-items:center;gap:8px;background:var(--card);padding:8px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+    .search input{background:transparent;border:none;color:var(--white);outline:none;width:200px}
+
+    /* grid */
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap)}
+    @media (max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:640px){.grid{grid-template-columns:1fr}}
+
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:14px;padding:10px;border:1px solid rgba(255,255,255,0.03);overflow:hidden;position:relative}
+    .thumb{position:relative;border-radius:10px;overflow:hidden;background:#000}
+    .thumb video{width:100%;height:220px;object-fit:cover;display:block}
+    .meta{display:flex;align-items:center;justify-content:space-between;padding:10px 6px}
+    .meta h3{margin:0;font-size:15px}
+    .meta p{margin:0;color:var(--muted);font-size:13px}
+    .badges{display:flex;gap:8px;flex-wrap:wrap}
+    .badge{font-size:11px;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.03);color:var(--muted)}
+
+    /* hover play preview */
+    .thumb .overlay{position:absolute;left:10px;right:10px;top:10px;bottom:10px;display:flex;align-items:flex-end;justify-content:flex-start;padding:12px;pointer-events:none}
+    .thumb .play{pointer-events:auto;background:rgba(0,0,0,0.45);backdrop-filter:blur(4px);padding:8px 12px;border-radius:10px;color:white;font-weight:600}
+
+    .card:hover{transform:translateY(-6px);transition:transform 0.18s ease}
+
+    /* lightbox modal */
+    .modal{position:fixed;inset:0;background:rgba(2,6,23,0.7);display:flex;align-items:center;justify-content:center;z-index:60;opacity:0;pointer-events:none;transition:opacity 0.2s}
+    .modal.open{opacity:1;pointer-events:auto}
+    .modal .modal-body{width:min(1100px,95%);max-height:90vh;background:linear-gradient(180deg,#071126,#081227);border-radius:12px;padding:12px;display:flex;flex-direction:column}
+    .modal video{width:100%;height:60vh;background:#000;border-radius:8px}
+    .modal .mmeta{display:flex;justify-content:space-between;align-items:center;padding:10px 6px}
+
+    /* footer */
+    footer{margin-top:28px;padding:18px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);display:flex;justify-content:space-between;align-items:center}
+    footer p{margin:0;color:var(--muted);font-size:14px}
+
+    /* tiny helpers */
+    .hidden{display:none}
+    .tag{font-size:12px;padding:6px 8px;border-radius:6px;background:rgba(255,255,255,0.03);color:var(--muted)}
+
+    /* nice entrance */
+    .grid .card{opacity:0;transform:translateY(8px);animation:cardIn 0.45s forwards}
+    @keyframes cardIn{to{opacity:1;transform:none}}
+
+    /* accessibility focus */
+    .btn:focus,.filter:focus{outline:3px solid rgba(124,92,255,0.18)}
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">EK</div>
+        <div>
+          <h1>Editkaro</h1>
+          <p>Social Media Marketing & Video Editing</p>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="btn" id="download">Download ZIP</button>
+        <button class="btn primary" id="hire">Contact / Hire</button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-info">
+        <h2>Selected Works — Short-form to Documentary</h2>
+        <p>Explore categories. Click any preview to open a lightbox and watch. Replace the sample files in <code>/videos</code> with your own assets.</p>
+      </div>
+      <div class="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <input id="search" placeholder="Search by title or tag" />
+      </div>
+    </section>
+
+    <section class="category-section">
+  <h2>🎬 Explore by Category</h2>
+  <div class="add-category">
+    <input type="text" id="categoryInput" placeholder="Enter a new category..." />
+    <button id="addCategoryBtn">Add Category</button>
+  </div>
+
+  <div class="filters" id="filters">
+    <!-- New categories will appear here -->
+  </div>
+</section>
+
+
+    <div class="filters" role="tablist" aria-label="Categories">
+      <button class="filter active" data-cat="all">All</button>
+      <button class="filter" data-cat="short">Short-form Videos</button>
+      <button class="filter" data-cat="long">Long-form Videos</button>
+      <button class="filter" data-cat="gaming">Gaming Edits</button>
+      <button class="filter" data-cat="football">Football Edits</button>
+      <button class="filter" data-cat="ecom">eCommerce Ads</button>
+      <button class="filter" data-cat="documentary">Documentary</button>
+      <button class="filter" data-cat="color">Color Grading</button>
+      <button class="filter" data-cat="anime">Anime</button>
+      <button class="filter" data-cat="ads">Ads</button>
+    </div>
+
+    <main>
+      <div class="grid" id="grid">
+
+        <!-- Card: sample items. Replace src with real videos/posters -->
+
+        <article class="card" data-tags="short,ads" data-cat="short">
+          <div class="thumb">
+            <video muted playsinline loop preload="metadata" poster="videos/poster1.jpg" data-src="videos/sample1.mp4"></video>
+            <div class="overlay"><div class="play">▶ Preview</div></div>
+          </div>
+          <div class="meta">
+            <div>
+              <h3>Product Teaser — eCommerce Ad</h3>
+              <p>15s — eCommerce ad</p>
+            </div>
+            <div class="badges">
+              <span class="badge">eCommerce</span>
+              <span class="badge">Short</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" data-tags="color,long" data-cat="long">
+          <div class="thumb">
+            <video muted playsinline loop preload="metadata" poster="videos/poster2.jpg" data-src="videos/sample2.mp4"></video>
+            <div class="overlay"><div class="play">▶ Preview</div></div>
+          </div>
+          <div class="meta">
+            <div>
+              <h3>Documentary Snippet — Color Grade</h3>
+              <p>3:45 — Documentary style</p>
+            </div>
+            <div class="badges">
+              <span class="badge">Documentary</span>
+              <span class="badge">Color Grade</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" data-tags="gaming,short" data-cat="gaming">
+          <div class="thumb">
+            <video muted playsinline loop preload="metadata" poster="videos/poster3.jpg" data-src="videos/sample3.mp4"></video>
+            <div class="overlay"><div class="play">▶ Preview</div></div>
+          </div>
+          <div class="meta">
+            <div>
+              <h3>Epic Frag Reel</h3>
+              <p>45s — Gaming edits</p>
+            </div>
+            <div class="badges">
+              <span class="badge">Gaming</span>
+              <span class="badge">Short</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" data-tags="football,ads" data-cat="football">
+          <div class="thumb">
+            <video muted playsinline loop preload="metadata" poster="videos/poster4.jpg" data-src="videos/sample4.mp4"></video>
+            <div class="overlay"><div class="play">▶ Preview</div></div>
+          </div>
+          <div class="meta">
+            <div>
+              <h3>Football Highlight Edit</h3>
+              <p>1:20 — Sport highlight</p>
+            </div>
+            <div class="badges">
+              <span class="badge">Football</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" data-tags="anime,short" data-cat="anime">
+          <div class="thumb">
+            <video muted playsinline loop preload="metadata" poster="videos/poster5.jpg" data-src="videos/sample5.mp4"></video>
+            <div class="overlay"><div class="play">▶ Preview</div></div>
+          </div>
+          <div class="meta">
+            <div>
+              <h3>Anime Montage</h3>
+              <p>1:05 — Anime edits</p>
+            </div>
+            <div class="badges">
+              <span class="badge">Anime</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" data-tags="ads,short" data-cat="ads">
+          <div class="thumb">
+            <video muted playsinline loop preload="metadata" poster="videos/poster6.jpg" data-src="videos/sample6.mp4"></video>
+            <div class="overlay"><div class="play">▶ Preview</div></div>
+          </div>
+          <div class="meta">
+            <div>
+              <h3>Social Ad — Carousel Cut</h3>
+              <p>0:30 — Ads</p>
+            </div>
+            <div class="badges">
+              <span class="badge">Ads</span>
+              <span class="badge">Short</span>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </main>
+
+    <footer>
+      <p>Made for <strong>Editkaro.in</strong> — Replace sample footage in <code>/videos</code> with your final exported mp4s & posters.</p>
+      <div>
+        <span class="tag">Responsive</span>
+        <span class="tag">Filterable</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Lightbox modal -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal-body" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+      <div class="mmeta">
+        <div>
+          <h3 id="mTitle">Title</h3>
+          <p id="mDesc" style="margin:4px 0 0;color:var(--muted)">Description</p>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn" id="downloadVideo">Download</button>
+          <button class="btn" id="close">Close</button>
+        </div>
+      </div>
+      <video id="modalVideo" controls playsinline></video>
+    </div>
+  </div>
+  
+
+  <script>
+    // JS: Filters, search, lightbox, preview on hover
+    const filters = document.querySelectorAll('.filter');
+    const cards = Array.from(document.querySelectorAll('.card'));
+    const grid = document.getElementById('grid');
+    const search = document.getElementById('search');
+
+    function applyFilter(cat){
+      cards.forEach((c,i)=>{
+        const cardCat = c.getAttribute('data-cat');
+        const tags = c.getAttribute('data-tags') || '';
+        const q = search.value.trim().toLowerCase();
+        const matchesCat = (cat === 'all') || (cardCat === cat);
+        const matchesQuery = !q || c.innerText.toLowerCase().includes(q) || tags.includes(q);
+        if(matchesCat && matchesQuery){
+          c.classList.remove('hidden');
+        } else { c.classList.add('hidden'); }
+      });
+    }
+
+    filters.forEach(f=>{
+      f.addEventListener('click', ()=>{
+        filters.forEach(x=>x.classList.remove('active'));
+        f.classList.add('active');
+        const cat = f.getAttribute('data-cat');
+        applyFilter(cat);
+      });
+    });
+
+    search.addEventListener('input', ()=>{
+      const active = document.querySelector('.filter.active').getAttribute('data-cat');
+      applyFilter(active);
+    });
+
+    // Video hover preview: play muted loop on hover, pause when out
+    document.querySelectorAll('.thumb').forEach(thumb=>{
+      const video = thumb.querySelector('video');
+      // lazy set src from data-src when first hovered to save bandwidth
+      let loaded = false;
+      thumb.addEventListener('mouseenter', ()=>{
+        if(!loaded){
+          if(video.dataset && video.dataset.src){ video.src = video.dataset.src; loaded=true; }
+        }
+        video.play().catch(()=>{});
+      });
+      thumb.addEventListener('mouseleave', ()=>{ video.pause(); video.currentTime = 0; });
+      // click opens modal
+      thumb.addEventListener('click', (e)=>{
+        const card = thumb.closest('.card');
+        openModal(card);
+      });
+    });
+
+    // modal logic
+    const modal = document.getElementById('modal');
+    const modalVideo = document.getElementById('modalVideo');
+    const mTitle = document.getElementById('mTitle');
+    const mDesc = document.getElementById('mDesc');
+    const closeBtn = document.getElementById('close');
+    const dlBtn = document.getElementById('downloadVideo');
+
+    function openModal(card){
+      const title = card.querySelector('h3').innerText;
+      const desc = card.querySelector('.meta p').innerText;
+      const vid = card.querySelector('video');
+      const src = vid.dataset.src || vid.src;
+      mTitle.innerText = title;
+      mDesc.innerText = desc;
+      modalVideo.src = src;
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
+      modalVideo.play().catch(()=>{});
+      dlBtn.onclick = ()=>{ downloadFile(src); };
+    }
+
+    function closeModal(){
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden','true');
+      modalVideo.pause();
+      modalVideo.src = '';
+    }
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
+
+    function downloadFile(url){
+      if(!url) return alert('Video not available for download. Replace data-src with a hosted mp4 to enable.');
+      const a = document.createElement('a'); a.href = url; a.download = '';
+      document.body.appendChild(a); a.click(); a.remove();
+    }
+
+    // Download ZIP button - simple client hint (no server). This will create and download a JSON manifest to package locally.
+    document.getElementById('download').addEventListener('click', ()=>{
+      const manifest = { files: [] };
+      cards.forEach(c=>{ manifest.files.push({title: c.querySelector('h3').innerText, src: c.querySelector('video').dataset.src || null}); });
+      const blob = new Blob([JSON.stringify(manifest, null, 2)], {type:'application/json'});
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'editkaro-manifest.json'; document.body.appendChild(a); a.click(); a.remove();
+    });
+
+    // Contact button opens mailto
+    document.getElementById('hire').addEventListener('click', ()=>{
+      window.location.href = 'mailto:hello@editkaro.in?subject=Portfolio%20Enquiry&body=Hi%20Editkaro%2C%0A%0AI%20saw%20your%20portfolio%20and%20would%20like%20to%20discuss...';
+    });
+
+    // initial lazy set: set posters and keep videos unloaded until hover or modal open
+    // If user wants autoplay previews on load, remove data-src logic and set src attribute.
+
+  </script>
+  <script>
+  const addCategoryBtn = document.getElementById('addCategoryBtn');
+  const categoryInput = document.getElementById('categoryInput');
+  const filtersContainer = document.getElementById('filters');
+
+  addCategoryBtn.addEventListener('click', () => {
+    const category = categoryInput.value.trim();
+    if (category === '') return;
+
+    // Create a new category button
+    const newBtn = document.createElement('button');
+    newBtn.classList.add('filter');
+    newBtn.textContent = category;
+
+    // Add click event for active state
+    newBtn.addEventListener('click', () => {
+      document.querySelectorAll('.filter').forEach(btn => btn.classList.remove('active'));
+      newBtn.classList.add('active');
+      // TODO: Filter videos by category logic
+    });
+
+    filtersContainer.appendChild(newBtn);
+    categoryInput.value = ''; // Clear input
+  });
+</script>
+
+</body>
+</html>
